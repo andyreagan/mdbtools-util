@@ -49,7 +49,7 @@ setup(
         'Issue Tracker': 'https://github.com/andyreagan/mdbtools-util/issues',
     },
     keywords=[],
-    python_requires='>=3.6',
+    python_requires='>=3.5',
     install_requires=[],
     extras_require={},
 )
