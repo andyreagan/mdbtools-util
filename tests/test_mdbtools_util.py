@@ -1,7 +1,7 @@
-from mdbtools_util.util import fix_column_name
-from mdbtools_util.util import extract_mdb_table
-from mdbtools_util.util import fix_mdb_column_definition
-from mdbtools_util.util import get_mdb_column_definition
+from mdbtools_util import fix_column_name
+from mdbtools_util import extract_mdb_table
+from mdbtools_util import fix_mdb_column_definition
+from mdbtools_util import get_mdb_column_definition
 
 
 def test_fix_column_name():
