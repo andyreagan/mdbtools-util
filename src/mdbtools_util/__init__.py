@@ -4,7 +4,7 @@
 # See that warning on Step 6 here:
 # https://packaging.python.org/guides/single-sourcing-package-version/
 # If we want to do imports here, there is a different approach.
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 from .util import (
     fix_column_name,

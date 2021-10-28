@@ -19,7 +19,7 @@ setup(
     name='mdbtools-util',
     version=mdbtools_util.__version__,
     license='MIT',
-    description='Compare two tables on Vertica.',
+    description='Helper functions for working with mdbtools CLI.',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
     author='Andy Reagan',
