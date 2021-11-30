@@ -6,12 +6,8 @@
 # If we want to do imports here, there is a different approach.
 __version__ = "0.1.4"
 
-from .util import (
-    fix_column_name,
-    extract_mdb_table,
-    fix_mdb_column_definition,
-    get_mdb_column_definition,
-)
+from .util import (extract_mdb_table, fix_column_name,
+                   fix_mdb_column_definition, get_mdb_column_definition)
 
 __all__ = [
     "fix_column_name",
