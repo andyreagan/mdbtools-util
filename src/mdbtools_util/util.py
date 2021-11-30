@@ -25,13 +25,17 @@ def extract_mdb_table(
     """Extract the table as csv from the .mdb database using command line tool mdb-export.
 
     Reference for mdb-export: https://linux.die.net/man/1/mdb-export
-    -X: Use to escape quoted characters within a field. Default is doubling.
-    -H: Supress header row
-    -d: Specify an alternative column delimiter If no delimiter is specified, table names will be delimited by a , (comma) character.
+    -H, --no-header                   Suppress header row.
+    -d, --delimiter=char              Specify an alternative column delimiter. Default is comma.
+    -R, --row-delimiter=char          Specify a row delimiter
+    -Q, --no-quote                    Don't wrap text-like fields in quotes.
+    -q, --quote=char                  Use <char> to wrap text-like fields. Default is double quote.
+    -X, --escape=format               Use <char> to escape quoted characters within a field. Default is doubling.
+    -e, --escape-invisible            Use C-style escaping for return (\r), tab (\t), line-feed (\n), and back-slash (\\) characters.
     -D: Set the date format (see strftime(3) for details) (https://linux.die.net/man/3/strftime)
     """
     with open(output_table, 'w') as sink:
-        run(["mdb-export", "-X", escape, "-H", "-d", delimiter, "-D", "%F %T", filename, input_table], stdout=sink)
+        run(["mdb-export", "-X", escape, "-H", "-d", delimiter, "-D", "%F %T", "-R", "\\n", "-q", '"', "-e", filename, input_table], stdout=sink)
     logger.info(
         "successfully ran extract of {input_table} from {filename} to {output_table}".format(
             input_table=input_table, filename=filename, output_table=output_table
