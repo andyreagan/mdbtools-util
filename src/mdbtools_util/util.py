@@ -74,10 +74,11 @@ def fix_mdb_column_definition(column_definition: str, old_table_name: str, new_t
     fixed_column_definition = []
     for line in column_definition.split("\n"):
         for idx, match in enumerate(re.findall(r"\"(.+?)\"", line)):
-            if match == old_table_name:
+            if match == old_table_name or match == old_table_name.lower():
                 if (idx == 0) and (
                     re.search('ALTER TABLE "{}"'.format(match), line)  # noqa: W503
                     or re.search('CREATE TABLE "{}"'.format(match), line)  # noqa: W503
+                    or re.search('CREATE TABLE IF NOT EXISTS "{}"'.format(match), line)  # noqa: W503
                     or re.search('DROP TABLE IF EXISTS "{}"'.format(match), line)
                 ):  # noqa: W503
                     line = re.sub(match, new_table_name, line, count=1)
@@ -103,7 +104,6 @@ def fix_mdb_column_definition(column_definition: str, old_table_name: str, new_t
 
 
 def get_mdb_column_definition(mdb_path: str, mdb_table_name: str, pg_table_name: str) -> str:
-    # from https://github.com/massmutual/experience-study/blob/master/study/migrate.py#L136
     print(mdb_path + ": " + mdb_table_name + " -> " + pg_table_name)
     mdb_tables = (
         Popen(
