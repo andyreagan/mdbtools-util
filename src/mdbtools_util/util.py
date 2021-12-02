@@ -85,6 +85,9 @@ def fix_mdb_column_definition(column_definition: str, old_table_name: str, new_t
             else:
                 line = re.sub(match, fix_column_name(match), line)
         line = re.sub("SERIAL,", "INTEGER,", line)
+        line = re.sub("SERIAL$", "INTEGER", line)
+        line = re.sub("TEXT,", "LONG VARCHAR,", line)
+        line = re.sub("TEXT$", "LONG VARCHAR", line)
         fixed_column_definition.append(line)
     fixed_column_definition_str = "\n".join(fixed_column_definition)
     fixed_column_definition_str = (

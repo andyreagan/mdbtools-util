@@ -4,7 +4,7 @@
 # See that warning on Step 6 here:
 # https://packaging.python.org/guides/single-sourcing-package-version/
 # If we want to do imports here, there is a different approach.
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 from .util import (extract_mdb_table, fix_column_name,
                    fix_mdb_column_definition, get_mdb_column_definition)
