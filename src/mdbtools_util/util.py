@@ -46,8 +46,12 @@ def extract_mdb_table(
     if no_quote:
         bool_options.append("-Q")
 
+    full_command = command + bool_options + options + args
+
+    logger.info(" ".join(full_command))
+
     with open(output_table, 'w') as sink:
-        run(command + bool_options + options + args, stdout=sink)
+        run(full_command, stdout=sink)
 
     logger.info(
         "successfully ran extract of {input_table} from {filename} to {output_table}".format(
