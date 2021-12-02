@@ -21,33 +21,27 @@ def extract_mdb_table(
     output_table: str,
     delimiter: str,
     escape: str = "@",
-    date_format: str = "%F %T",
+    date_format: str = "%F",
+    time_format: str = "%F %T",
     row_delimiter: str = "\\n",
     quote_char: str = '"',
     skip_header: bool = True,
     escape_invisible: bool = True,
     no_quote: bool = False,
 ) -> str:
-    """Extract the table as csv from the .mdb database using command line tool mdb-export.
-
-    Reference for mdb-export: https://linux.die.net/man/1/mdb-export
-    -H, --no-header                   Suppress header row.
-    -d, --delimiter=char              Specify an alternative column delimiter. Default is comma.
-    -R, --row-delimiter=char          Specify a row delimiter
-    -Q, --no-quote                    Don't wrap text-like fields in quotes.
-    -q, --quote=char                  Use <char> to wrap text-like fields. Default is double quote.
-    -X, --escape=format               Use <char> to escape quoted characters within a field. Default is doubling.
-    -e, --escape-invisible            Use C-style escaping for return (\r), tab (\t), line-feed (\n), and back-slash (\\) characters.
-    -D: Set the date format (see strftime(3) for details) (https://linux.die.net/man/3/strftime)
+    """
+    Extract the table as csv from the .mdb database using command line tool mdb-export.
     """
     command = ["mdb-export"]
-    options = ["-X", escape, "-d", delimiter, "-D", date_format, "-R", row_delimiter, "-q", quote_char]
+    options = ["-X", escape, "-d", delimiter, "-D", date_format, "-T", time_format, "-R", row_delimiter, "-q", quote_char]
     args = [filename, input_table]
 
     bool_options = []
     if skip_header:
         bool_options.append("-H")
     if escape_invisible:
+        # note, `-e` is only available with v0.9.1
+        # see https://github.com/mdbtools/mdbtools/pull/222
         bool_options.append("-e")
     if no_quote:
         bool_options.append("-Q")
@@ -74,10 +68,14 @@ def fix_mdb_column_definition(column_definition: str, old_table_name: str, new_t
     fixed_column_definition = []
     for line in column_definition.split("\n"):
         for idx, match in enumerate(re.findall(r"\"(.+?)\"", line)):
+            # v1.0.0 of mdbtools lowercases table names
+            # see: https://github.com/mdbtools/mdbtools/pull/322
             if match == old_table_name or match == old_table_name.lower():
                 if (idx == 0) and (
                     re.search('ALTER TABLE "{}"'.format(match), line)  # noqa: W503
                     or re.search('CREATE TABLE "{}"'.format(match), line)  # noqa: W503
+                    # v1.0.0 uses the IF NOT EXISTS on the create statement
+                    # see: https://github.com/mdbtools/mdbtools/pull/321
                     or re.search('CREATE TABLE IF NOT EXISTS "{}"'.format(match), line)  # noqa: W503
                     or re.search('DROP TABLE IF EXISTS "{}"'.format(match), line)
                 ):  # noqa: W503
